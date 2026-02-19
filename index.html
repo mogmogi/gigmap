@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>GigMap ⚡ // Secure Edition 🙆‍♀️</title>
+<title>GigMap ⚡ // Ultimate Professional Edition 🙆‍♀️</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -52,21 +52,37 @@ body { font-family: 'Space Mono', monospace; background: var(--bg); color: var(-
 .grow b { font-size: 11px; display: block; margin-bottom: 2px; text-transform: uppercase; }
 .grow small { font-size: 8.5px; color: #999; display: block; line-height: 1.4; }
 
-/* MOBILE ELEMENTS */
+/* SIDEBAR FOOTER */
+#sidebar-footer { border-top: 1px solid var(--border); background: #fff; }
+#music-player { padding: 12px 20px; display: none; }
+#music-player b { font-size: 8px; text-transform: uppercase; display: block; margin-bottom: 5px; color: var(--accent); }
+#yt-frame { width: 100%; height: 60px; border: none; border-radius: 2px; }
+#info-btn { padding: 10px 20px; font-size: 8px; color: #ccc; cursor: pointer; text-transform: uppercase; text-align: right; }
+
+/* MODALS */
+.overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.94); display: flex; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(4px); }
+.modal { background: #fff; border: 1px solid var(--border); padding: 25px; width: 100%; max-width: 450px; position: relative; }
+.close-modal { position: absolute; top: 12px; right: 12px; cursor: pointer; font-size: 12px; color: #ccc; }
+.tabs { display: flex; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+.tab { cursor: pointer; font-size: 9px; font-weight: bold; text-transform: uppercase; color: #ccc; }
+.tab.active { color: var(--text); border-bottom: 2px solid var(--text); }
+textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--border); font-family: inherit; font-size: 10px; padding: 10px; resize: none; outline: none; background: #fafafa; }
+.drop-zone { border: 1px dashed #ddd; padding: 30px; text-align: center; font-size: 9px; color: #999; cursor: pointer; margin: 10px 0; text-transform: uppercase; }
+
+/* MOBILE */
 #mobile-toggle {
     display: none; position: fixed; bottom: 20px; left: 20px; z-index: 2000;
     width: 50px; height: 50px; border-radius: 25px; background: var(--accent);
     color: white; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     font-size: 20px; cursor: pointer; align-items: center; justify-content: center;
 }
-
 @media (max-width: 768px) {
     #sidebar { position: absolute; left: 0; height: 100%; width: 280px; transform: translateX(-100%); box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
     #sidebar.open { transform: translateX(0); }
     #mobile-toggle { display: flex; }
 }
 
-/* OK GESTURE ANIMATION 🙆‍♀️ */
+/* ANIMATION 🙆‍♀️ */
 .ok-floating {
     position: fixed; bottom: -50px; left: 50%; z-index: 9999; font-size: 40px;
     animation: floatUp 3s ease-out forwards; pointer-events: none;
@@ -77,23 +93,9 @@ body { font-family: 'Space Mono', monospace; background: var(--bg); color: var(-
     100% { transform: translate(-50%, -100vh) scale(1.5); opacity: 0; }
 }
 
-/* MAP & TOOLTIP */
 #map-wrap { flex: 1; position: relative; background: #f0f0f0; }
 #map { position: absolute; inset: 0; z-index: 1; }
-.artist-tooltip { 
-    background: var(--text) !important; border: none !important; border-radius: 2px !important; 
-    color: #fff !important; font-family: 'Space Mono', monospace !important; 
-    font-size: 9px !important; padding: 4px 8px !important;
-}
-
-/* MODALS */
-.overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.94); display: flex; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(4px); }
-.modal { background: #fff; border: 1px solid var(--border); padding: 25px; width: 100%; max-width: 450px; position: relative; }
-.close-modal { position: absolute; top: 12px; right: 12px; cursor: pointer; font-size: 12px; color: #ccc; }
-.tabs { display: flex; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-.tab { cursor: pointer; font-size: 9px; font-weight: bold; text-transform: uppercase; color: #ccc; }
-.tab.active { color: var(--text); border-bottom: 2px solid var(--text); }
-textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--border); font-family: inherit; font-size: 10px; padding: 10px; resize: none; outline: none; background: #fafafa; }
+.artist-tooltip { background: var(--text) !important; border: none !important; color: #fff !important; font-family: 'Space Mono' !important; font-size: 9px !important; padding: 4px 8px !important; }
 </style>
 </head>
 <body>
@@ -116,19 +118,36 @@ textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--b
 
     <div id="filters">
       <div id="month-pills">
-        <script>
-            for(let i=1; i<=12; i++) document.write(`<button id="mpill-${i}" class="mpill" onclick="tglM(${i})">${i.toString().padStart(2,'0')}</button>`);
-        </script>
+        <script>for(let i=1; i<=12; i++) document.write(`<button id="mpill-${i}" class="mpill" onclick="tglM(${i})">${i.toString().padStart(2,'0')}</button>`);</script>
       </div>
       <div class="action-row">
         <button class="btn-secondary" onclick="openPromptGen()">AI_PROMPT_GEN</button>
         <button class="btn-main" onclick="openImp()">+ ADD_DATA</button>
       </div>
     </div>
+    
     <div id="legend"></div>
     <div id="gig-list"></div>
+
+    <div id="sidebar-footer">
+        <div id="music-player">
+            <b id="now-playing">LISTEN TO ARTIST</b>
+            <iframe id="yt-frame" src="" allow="autoplay"></iframe>
+        </div>
+        <div id="info-btn" onclick="openInfo()">[?] Info & Credits</div>
+    </div>
   </div>
   <div id="map-wrap"><div id="map"></div></div>
+</div>
+
+<div id="m-info" class="overlay" style="display:none" onclick="if(event.target===this)closeInfo()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="close-modal" onclick="closeInfo()">[X]</div>
+      <h2 style="font-size: 12px; text-transform: uppercase; margin-bottom: 15px;">GigMap // Info</h2>
+      <p style="font-size: 9px; line-height: 1.6; color: #666;"><b>Credits:</b> Built with OpenStreetMap data and CartoDB light tiles.</p>
+      <p style="font-size: 9px; line-height: 1.6; color: #666;"><b>Contact:</b> Almog // <a href="mailto:almog.sj@gmail.com" style="color:var(--accent)">almog.sj@gmail.com</a></p>
+      <p style="font-size: 9px; line-height: 1.6; color: #666; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;"><b>Disclaimer:</b> Data is AI-generated. Always verify dates and tickets on official artist websites.</p>
+    </div>
 </div>
 
 <div id="m-imp" class="overlay" style="display:none" onclick="if(event.target===this)closeImp()">
@@ -138,15 +157,20 @@ textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--b
         <div id="tab-paste" class="tab active" onclick="switchTab('paste')">Paste CSV</div>
         <div id="tab-file" class="tab" onclick="switchTab('file')">Upload File</div>
     </div>
-    <div id="view-paste"><textarea id="paste-area" placeholder="PASTE_CSV_CODE_HERE..."></textarea></div>
+    
+    <div id="view-paste">
+        <textarea id="paste-area" placeholder="PASTE_CSV_CODE_HERE..."></textarea>
+    </div>
+    
     <div id="view-file" style="display:none">
-        <div style="border:1px dashed #ddd; padding:30px; text-align:center; font-size:9px;" onclick="document.getElementById('fin').click()">
-            <span id="drop-text">📂 Click to Upload CSV</span>
+        <div id="drop-zone-el" class="drop-zone" onclick="document.getElementById('fin').click()">
+            <span id="drop-text">📂 Drop CSV or Click to Browse</span>
         </div>
         <input id="fin" type="file" accept=".csv" style="display:none" onchange="hFile(event)"/>
     </div>
+
     <div id="prog" style="display:none; font-size: 9px; margin: 10px 0; color: var(--accent); font-weight: bold;">GEOLOCATING CITIES...</div>
-    <button class="btn-main" style="width:100%; margin-top:10px;" id="btn-process" onclick="processData()">EXECUTE IMPORT</button>
+    <button class="btn-main" style="width:100%; margin-top:10px;" onclick="processData()">EXECUTE IMPORT</button>
   </div>
 </div>
 
@@ -154,7 +178,7 @@ textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--b
     <div class="modal" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closePrompt()">[X]</div>
       <h2 style="font-size: 12px; text-transform: uppercase;">AI PROMPT GENERATOR</h2>
-      <input type="text" id="artist-names" placeholder="e.g. Idles, Osees" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: inherit; font-size: 10px; margin: 15px 0; outline: none;">
+      <input type="text" id="artist-names" placeholder="e.g. Idles, Osees" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: inherit; font-size: 10px; margin: 15px 0; outline: none; width: 100%;">
       <button class="btn-main" style="width:100%;" id="copy-btn" onclick="generatePrompt()">Copy Full Prompt</button>
     </div>
 </div>
@@ -168,8 +192,7 @@ function triggerOk() {
     for(let i=0; i<8; i++) {
         setTimeout(() => {
             const el = document.createElement('div');
-            el.className = 'ok-floating';
-            el.innerHTML = '🙆‍♀️';
+            el.className = 'ok-floating'; el.innerHTML = '🙆‍♀️';
             el.style.left = (Math.random() * 80 + 10) + '%';
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 3000);
@@ -177,6 +200,8 @@ function triggerOk() {
     }
 }
 
+function openInfo() { document.getElementById('m-info').style.display='flex'; }
+function closeInfo() { document.getElementById('m-info').style.display='none'; }
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 function openImp() { document.getElementById('m-imp').style.display='flex'; }
 function closeImp() { if(!imping) document.getElementById('m-imp').style.display='none'; }
@@ -191,44 +216,31 @@ function switchTab(m) {
     document.getElementById('view-file').style.display = m==='file' ? 'block' : 'none';
 }
 
+function hFile(e) { if(e.target.files[0]) document.getElementById('drop-text').innerHTML = `📄 ${e.target.files[0].name}`; }
+
 function generatePrompt() {
     const names = document.getElementById('artist-names').value;
     if(!names) return;
-    
     const today = new Date().toISOString().split('T')[0];
-    
-    // פה בניתי את ה"מבנה הקשיח" של הפרומפט
-    const p = `Subject: Generate Future Gig List for GigMap (STRICT CSV FORMAT)\n\nArtists: ${names}.\n\nSTRICT RULES:\n1. Include ONLY dates from ${today} onwards.\n2. Use EXACTLY these headers in this order: Artist, City, Venue, Date, Month, Year, Ticket Link.\n3. Date format MUST be YYYY-MM-DD.\n4. Month MUST be a number (1-12).\n5. Source: Songkick only.\n6. Provide RAW CSV code block ONLY. No intro, no outro.`;
-    
-    const btn = document.getElementById('copy-btn');
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(p).then(() => { btn.innerText = 'COPIED!'; setTimeout(closePrompt, 1000); });
-    } else {
-        const textArea = document.createElement("textarea");
-        textArea.value = p; document.body.appendChild(textArea); textArea.select();
-        try { document.execCommand('copy'); btn.innerText = 'COPIED!'; setTimeout(closePrompt, 1000); } catch (err) { alert('Copy failed.'); }
-        document.body.removeChild(textArea);
+    const p = `Subject: Future Gig List (STRICT CSV)\n\nArtists: ${names}.\n\nSTRICT RULES:\n1. ONLY dates from ${today} onwards.\n2. Headers: Artist, City, Venue, Date, Month, Year, Ticket Link.\n3. Date format: YYYY-MM-DD. Month: Number (1-12).\n4. RAW CSV ONLY.`;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(p).then(() => { document.getElementById('copy-btn').innerText = 'COPIED!'; setTimeout(closePrompt, 1000); });
     }
 }
 
 async function processData() {
     let txt = "";
-    if(currentMode==='paste') txt = document.getElementById('paste-area').value;
+    if(currentMode === 'paste') txt = document.getElementById('paste-area').value;
     else if(document.getElementById('fin').files[0]) txt = await document.getElementById('fin').files[0].text();
+    
     if(!txt) return;
-
     imping = true; document.getElementById('prog').style.display = 'block';
     const lines = txt.split('\n');
     const headers = lines[0].toLowerCase().split(',').map(h=>h.trim());
-
     for(let r of lines.slice(1).filter(l=>l.trim())) {
         const cols = r.split(',').map(c=>c.trim());
         const d = {}; headers.forEach((h,i)=> d[h]=cols[i]);
         if(!d.artist || !d.city) continue;
-
-        const isDup = gigs.some(g => g.artist.toLowerCase() === d.artist.toLowerCase() && g.city.toLowerCase() === d.city.toLowerCase() && g.date === d.date);
-        if(isDup) continue;
-
         const geo = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d.city)}&format=json&limit=1`).then(res=>res.json());
         if(geo[0]) {
             let mNum = parseInt(d.month) || (MF.findIndex(n => (d.month||"").toUpperCase().includes(n)) + 1);
@@ -236,21 +248,15 @@ async function processData() {
         }
         await new Promise(r => setTimeout(r, 400));
     }
-    imping = false; document.getElementById('prog').style.display = 'none'; closeImp(); refresh();
-    triggerOk();
+    imping = false; document.getElementById('prog').style.display = 'none'; closeImp(); refresh(); triggerOk();
 }
 
 function refresh() {
     const arts = [...new Set(gigs.map(g=>g.artist))].sort();
     const filtered = gigs.filter(g => (activeM.size === 0 || activeM.has(g.month)) && (activeArt === 'all' || g.artist === activeArt)).sort((a,b) => new Date(a.date) - new Date(b.date));
-    
     document.getElementById('gig-count').innerText = `${filtered.length.toString().padStart(2,'0')} CONCERTS DETECTED`;
-    for(let i=1; i<=12; i++) {
-        const el = document.getElementById(`mpill-${i}`);
-        if(el) el.classList.toggle('on', activeM.has(i));
-    }
+    for(let i=1; i<=12; i++) document.getElementById(`mpill-${i}`).classList.toggle('on', activeM.has(i));
     document.getElementById('legend').innerHTML = arts.map(a => `<div class="lpill ${activeArt===a?'on':''}" onclick="tglA('${a}')"><div class="ldot" style="background:${PAL[arts.indexOf(a)%PAL.length]}"></div>${a}</div>`).join('');
-    
     clusterGroup.clearLayers();
     filtered.forEach(g => {
         const color = PAL[arts.indexOf(g.artist) % PAL.length];
@@ -262,31 +268,33 @@ function refresh() {
                 iconSize: [sz, sz], iconAnchor: [sz/2, sz/2]
             })
         });
-
-        mk.bindPopup(`<div style="font-family:'Space Mono';text-transform:uppercase;"><b style="color:var(--accent);">${g.artist}</b><br><div style="margin-top:5px;font-weight:700;">${g.venue}</div><div style="color:#666;">${g.city}</div><div style="margin-top:8px;border-top:1px solid #eee;padding-top:5px;">📅 ${g.date}</div></div>`, { closeButton: true });
+        mk.bindPopup(`<div style="font-family:'Space Mono';text-transform:uppercase;"><b style="color:var(--accent);">${g.artist}</b><br><div>${g.venue}</div><div>${g.city}</div><div style="margin-top:8px;">📅 ${g.date}</div></div>`);
         mk.bindTooltip(`${g.artist.toUpperCase()} // ${g.date}`, { permanent: false, direction: 'top', className: 'artist-tooltip', offset: [0, -sz/2] });
-
-        mk.on('click', () => { 
-            selId = g.id; refresh(); 
-            if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
-        });
+        mk.on('click', () => { updateMusic(g.artist, g.id); });
         clusterGroup.addLayer(mk);
     });
-
-    document.getElementById('gig-list').innerHTML = filtered.map(g => `<div class="grow ${g.id===selId?'sel':''}" onclick="flyTo(${g.id})"><b>${g.venue}</b><small>${g.artist} // ${g.city}</small><small style="color:var(--accent); font-weight:700;">📅 ${g.date}</small></div>`).join('');
+    document.getElementById('gig-list').innerHTML = filtered.map(g => `<div class="grow ${g.id===selId?'sel':''}" onclick="updateMusic('${g.artist}', ${g.id})"><b>${g.venue}</b><small>${g.artist} // ${g.city}</small><small style="color:var(--accent); font-weight:700;">📅 ${g.date}</small></div>`).join('');
 }
 
-function flyTo(id) {
+function updateMusic(artist, id) {
+    selId = id;
     const g = gigs.find(x => x.id === id);
-    if (g) { selId = id; map.flyTo([g.lat, g.lng], 13); refresh(); if (window.innerWidth <= 768) toggleSidebar(); }
+    if(g) map.flyTo([g.lat, g.lng], 13);
+    document.getElementById('music-player').style.display = 'block';
+    document.getElementById('now-playing').innerText = `LISTEN TO ${artist.toUpperCase()}`;
+    document.getElementById('yt-frame').src = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(artist + " live concert")}&autoplay=1`;
+    if (window.innerWidth <= 768) toggleSidebar();
+    refresh();
 }
+
 function tglM(m) { activeM.has(m) ? activeM.delete(m) : activeM.add(m); refresh(); }
 function tglA(a) { activeArt = (activeArt === a) ? 'all' : a; refresh(); }
-function hFile(e) { if(e.target.files[0]) document.getElementById('drop-text').innerHTML = `📄 ${e.target.files[0].name}`; }
 
 window.addEventListener('load', () => {
     map = L.map('map', { center: [40, 0], zoom: 3, zoomControl: false });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    }).addTo(map);
     clusterGroup = L.markerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: false, disableClusteringAtZoom: 16 }).addTo(map);
 });
 </script>
