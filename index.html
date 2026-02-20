@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<title>GigMap ⚡ // Ultimate Professional Edition 🙆‍♀️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+<title>GigMap ⚡ // Final Professional Edition 🙆‍♀️</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -15,22 +15,17 @@
 <style>
 :root { --bg: #fafafa; --accent: #ff4d00; --text: #1a1a1a; --border: #e8e8e8; }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-body { font-family: 'Space Mono', monospace; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; position: fixed; width: 100%; }
-#app { display: flex; height: 100vh; width: 100vw; position: relative; }
+body { font-family: 'Space Mono', monospace; background: var(--bg); color: var(--text); height: 100dvh; width: 100%; overflow: hidden; position: fixed; }
+#app { display: flex; height: 100%; width: 100%; position: relative; }
 
 /* SIDEBAR */
-#sidebar { 
-    width: 260px; flex-shrink: 0; display: flex; flex-direction: column; 
-    background: #fff; border-right: 1px solid var(--border); z-index: 1001; 
-    transition: transform 0.3s ease;
-}
-
+#sidebar { width: 260px; flex-shrink: 0; display: flex; flex-direction: column; background: #fff; border-right: 1px solid var(--border); z-index: 2000; transition: transform 0.3s ease; height: 100%; }
 #sidebar-header { padding: 20px 20px 10px; border-bottom: 1px solid var(--border); cursor: pointer; }
 #sidebar-header h1 { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: -0.5px; }
 #sidebar-header h1 span { color: var(--accent); }
 
-#quick-guide { padding: 12px 20px; font-size: 8.5px; line-height: 1.4; color: #666; background: #fdfdfd; border-bottom: 1px solid var(--border); }
-#quick-guide b { color: var(--text); text-transform: uppercase; font-size: 9px; display: block; margin-bottom: 4px; }
+#quick-guide { padding: 15px 20px; font-size: 9.5px; line-height: 1.5; color: #666; background: #fdfdfd; border-bottom: 1px solid var(--border); }
+#quick-guide b { color: var(--text); text-transform: uppercase; font-size: 10px; display: block; margin-bottom: 6px; }
 
 #filters { padding: 12px 20px; display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--border); }
 #month-pills { display: flex; flex-wrap: wrap; gap: 3px; }
@@ -39,68 +34,58 @@ body { font-family: 'Space Mono', monospace; background: var(--bg); color: var(-
 
 .action-row { display: flex; flex-direction: column; gap: 6px; margin-top: 5px; }
 .btn-main { background: var(--accent); color: #fff; border: none; padding: 10px; font-family: inherit; font-weight: 700; cursor: pointer; text-transform: uppercase; font-size: 9px; }
-.btn-secondary { border: 1px solid var(--border); background: #f8f8f8; padding: 8px; font-family: inherit; cursor: pointer; text-transform: uppercase; font-size: 9px; color: var(--text); font-weight: 700; }
+.btn-main:disabled { background: #ccc; cursor: not-allowed; }
+.btn-secondary { border: 1px solid var(--border); background: #f8f8f8; padding: 8px; font-family: inherit; cursor: pointer; text-transform: uppercase; font-size: 9px; }
 
 #legend { padding: 10px 20px; display: flex; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid var(--border); }
 .lpill { display: flex; align-items: center; gap: 5px; cursor: pointer; font-size: 8px; color: #888; }
 .lpill.on { color: var(--text); font-weight: 700; }
 .ldot { width: 5px; height: 5px; border-radius: 50%; }
 
-#gig-list { flex: 1; overflow-y: auto; }
-.grow { padding: 10px 20px; cursor: pointer; border-bottom: 1px solid #f9f9f9; }
-.grow.sel { border-left: 3px solid var(--accent); background: #fcfcfc; }
-.grow b { font-size: 11px; display: block; margin-bottom: 2px; text-transform: uppercase; }
-.grow small { font-size: 8.5px; color: #999; display: block; line-height: 1.4; }
+#gig-list { flex: 1; overflow-y: auto; background: #fff; }
+.grow { padding: 12px 20px; cursor: pointer; border-bottom: 1px solid #f2f2f2; transition: background 0.2s; }
+.grow.sel { border-left: 3px solid var(--accent); background: #fef8f5; }
+.grow b { display: block; font-size: 10px; margin-bottom: 2px; text-transform: uppercase; }
+.grow small { display: block; font-size: 8.5px; color: #999; }
+.grow .g-date { color: var(--accent); font-weight: 700; font-size: 8px; margin-top: 4px; }
 
-/* SIDEBAR FOOTER */
-#sidebar-footer { border-top: 1px solid var(--border); background: #fff; }
-#music-player { padding: 12px 20px; display: none; }
-#music-player b { font-size: 8px; text-transform: uppercase; display: block; margin-bottom: 5px; color: var(--accent); }
-#yt-frame { width: 100%; height: 60px; border: none; border-radius: 2px; }
-#info-btn { padding: 10px 20px; font-size: 8px; color: #ccc; cursor: pointer; text-transform: uppercase; text-align: right; }
+/* FLOATING & MOBILE */
+#floating-info-btn { position: fixed; top: 20px; right: 20px; z-index: 3000; width: 35px; height: 35px; background: #fff; border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+#custom-attr { position: fixed; bottom: 5px; right: 10px; z-index: 3000; font-size: 7px; color: #999; background: rgba(255,255,255,0.7); padding: 2px 5px; border-radius: 3px; }
+#mobile-toggle { display: none; position: fixed; bottom: 25px; left: 20px; z-index: 2500; width: 50px; height: 50px; border-radius: 25px; background: var(--accent); color: white; border: none; font-size: 20px; }
+@media (max-width: 768px) { #sidebar { position: absolute; left: 0; transform: translateX(-100%); width: 280px; } #sidebar.open { transform: translateX(0); } #mobile-toggle { display: block; } }
+
+/* ANIMATION 🙆‍♀️ */
+.ok-floating { position: fixed; bottom: -50px; left: 50%; z-index: 9999; font-size: 40px; animation: floatUp 3s ease-out forwards; pointer-events: none; }
+@keyframes floatUp { 0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(-50%, -100vh) scale(1.5); opacity: 0; } }
+
+#map-wrap { flex: 1; position: relative; z-index: 1; }
+#map { position: absolute; inset: 0; width: 100%; height: 100%; }
+.artist-label { background: var(--text) !important; color: #fff !important; border: none !important; font-size: 8.5px !important; padding: 3px 6px !important; border-radius: 2px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
 /* MODALS */
-.overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.94); display: flex; align-items: center; justify-content: center; z-index: 3000; backdrop-filter: blur(4px); }
-.modal { background: #fff; border: 1px solid var(--border); padding: 25px; width: 100%; max-width: 450px; position: relative; }
+.overlay { position: fixed; inset: 0; background: rgba(255,255,255,0.94); display: flex; align-items: center; justify-content: center; z-index: 4000; backdrop-filter: blur(4px); }
+.modal { background: #fff; border: 1px solid var(--border); padding: 25px; width: 90%; max-width: 450px; position: relative; max-height: 85vh; overflow-y: auto; }
 .close-modal { position: absolute; top: 12px; right: 12px; cursor: pointer; font-size: 12px; color: #ccc; }
 .tabs { display: flex; gap: 15px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
 .tab { cursor: pointer; font-size: 9px; font-weight: bold; text-transform: uppercase; color: #ccc; }
 .tab.active { color: var(--text); border-bottom: 2px solid var(--text); }
-textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--border); font-family: inherit; font-size: 10px; padding: 10px; resize: none; outline: none; background: #fafafa; }
-.drop-zone { border: 1px dashed #ddd; padding: 30px; text-align: center; font-size: 9px; color: #999; cursor: pointer; margin: 10px 0; text-transform: uppercase; }
+textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--border); font-size: 10px; padding: 10px; background: #fafafa; outline: none; resize: none; }
 
-/* MOBILE */
-#mobile-toggle {
-    display: none; position: fixed; bottom: 20px; left: 20px; z-index: 2000;
-    width: 50px; height: 50px; border-radius: 25px; background: var(--accent);
-    color: white; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    font-size: 20px; cursor: pointer; align-items: center; justify-content: center;
-}
-@media (max-width: 768px) {
-    #sidebar { position: absolute; left: 0; height: 100%; width: 280px; transform: translateX(-100%); box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
-    #sidebar.open { transform: translateX(0); }
-    #mobile-toggle { display: flex; }
-}
+#progress-container { display: none; margin-top: 15px; }
+#progress-bar-bg { width: 100%; height: 4px; background: #eee; border-radius: 2px; overflow: hidden; margin-bottom: 5px; }
+#progress-bar-fill { width: 0%; height: 100%; background: var(--accent); transition: width 0.3s ease; }
+#progress-status { font-size: 8px; text-transform: uppercase; color: #999; }
 
-/* ANIMATION 🙆‍♀️ */
-.ok-floating {
-    position: fixed; bottom: -50px; left: 50%; z-index: 9999; font-size: 40px;
-    animation: floatUp 3s ease-out forwards; pointer-events: none;
-}
-@keyframes floatUp {
-    0% { transform: translate(-50%, 0) scale(0.5); opacity: 0; }
-    20% { opacity: 1; }
-    100% { transform: translate(-50%, -100vh) scale(1.5); opacity: 0; }
-}
-
-#map-wrap { flex: 1; position: relative; background: #f0f0f0; }
-#map { position: absolute; inset: 0; z-index: 1; }
-.artist-tooltip { background: var(--text) !important; border: none !important; color: #fff !important; font-family: 'Space Mono' !important; font-size: 9px !important; padding: 4px 8px !important; }
+.ai-links { display: flex; gap: 8px; margin-top: 10px; }
+.ai-btn { flex: 1; padding: 8px; border: 1px solid var(--border); background: #fff; font-size: 8px; text-transform: uppercase; color: var(--text); text-align: center; text-decoration: none; font-family: inherit; cursor: pointer; }
 </style>
 </head>
 <body>
 
 <button id="mobile-toggle" onclick="toggleSidebar()">☰</button>
+<div id="floating-info-btn" onclick="openInfo()">?</div>
+<div id="custom-attr">&copy; <a href="https://osm.org/copyright" target="_blank">OpenStreetMap</a> // <a href="https://carto.com/" target="_blank">CARTO</a></div>
 
 <div id="app">
   <div id="sidebar">
@@ -108,12 +93,12 @@ textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--b
       <h1>GIG_MAP <span>⚡</span></h1>
       <p id="gig-count" style="font-size:8px; color:#999; margin-top:2px;">00 CONCERTS DETECTED</p>
     </div>
-
+    
     <div id="quick-guide">
-        <b>HOW TO USE:</b>
-        1. Click 'AI Prompt Gen' & enter artists.<br>
-        2. Paste prompt into Gemini/AI.<br>
-        3. Copy the CSV result & click '+ Add Data'.
+        <b>GET STARTED:</b><br>
+        1. <b>Gen Prompt:</b> Click the button below and enter the artists you're tracking.<br>
+        2. <b>Ask AI:</b> Copy the generated prompt and paste it into Gemini or ChatGPT.<br>
+        3. <b>Sync Data:</b> Copy the AI's CSV table and click <b>+ Add Data</b> to pin the gigs on your map!
     </div>
 
     <div id="filters">
@@ -125,17 +110,8 @@ textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--b
         <button class="btn-main" onclick="openImp()">+ ADD_DATA</button>
       </div>
     </div>
-    
     <div id="legend"></div>
     <div id="gig-list"></div>
-
-    <div id="sidebar-footer">
-        <div id="music-player">
-            <b id="now-playing">LISTEN TO ARTIST</b>
-            <iframe id="yt-frame" src="" allow="autoplay"></iframe>
-        </div>
-        <div id="info-btn" onclick="openInfo()">[?] Info & Credits</div>
-    </div>
   </div>
   <div id="map-wrap"><div id="map"></div></div>
 </div>
@@ -143,10 +119,29 @@ textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--b
 <div id="m-info" class="overlay" style="display:none" onclick="if(event.target===this)closeInfo()">
     <div class="modal" onclick="event.stopPropagation()">
       <div class="close-modal" onclick="closeInfo()">[X]</div>
-      <h2 style="font-size: 12px; text-transform: uppercase; margin-bottom: 15px;">GigMap // Info</h2>
-      <p style="font-size: 9px; line-height: 1.6; color: #666;"><b>Credits:</b> Built with OpenStreetMap data and CartoDB light tiles.</p>
-      <p style="font-size: 9px; line-height: 1.6; color: #666;"><b>Contact:</b> Almog // <a href="mailto:almog.sj@gmail.com" style="color:var(--accent)">almog.sj@gmail.com</a></p>
-      <p style="font-size: 9px; line-height: 1.6; color: #666; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;"><b>Disclaimer:</b> Data is AI-generated. Always verify dates and tickets on official artist websites.</p>
+      <h2 style="font-size: 13px; text-transform: uppercase; margin-bottom: 18px; border-bottom: 1px solid var(--accent); padding-bottom: 5px;">GigMap ⚡ Info & Credits</h2>
+      <p style="font-size: 10px; font-weight:700; color: var(--text); margin-bottom: 5px;">CREDITS</p>
+      <p style="font-size: 9px; line-height: 1.6; color: #666; margin-bottom: 15px;">Map data by <b>OpenStreetMap</b> contributors. Tiles by <b>CARTO</b>.</p>
+      <p style="font-size: 10px; font-weight:700; color: var(--text); margin-bottom: 5px;">CONTACT</p>
+      <p style="font-size: 9px; line-height: 1.6; color: #666; margin-bottom: 15px;">Created by <b>Almog</b>. Feedback: <a href="mailto:almog.sj@gmail.com" style="color:var(--accent); text-decoration: none;">almog.sj@gmail.com</a></p>
+      <p style="font-size: 10px; font-weight:700; color: var(--text); margin-bottom: 5px;">DISCLAIMER</p>
+      <p style="font-size: 9px; line-height: 1.6; color: #666; text-align: justify;">This tool uses <b>AI</b> to aggregate concert data. Always <b>verify dates and locations</b> on official platforms before travel.</p>
+      <p style="font-size:7px; color:#ccc; margin-top:20px; text-align: center;">Version 5.5 // 🙆‍♀️⚡</p>
+    </div>
+</div>
+
+<div id="m-prompt" class="overlay" style="display:none" onclick="if(event.target===this)closePrompt()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="close-modal" onclick="closePrompt()">[X]</div>
+      <h2 style="font-size: 12px; text-transform: uppercase;">PROMPT GENERATOR</h2>
+      <input type="text" id="artist-names" placeholder="Artists (e.g. Idles)" style="width: 100%; padding: 10px; margin: 15px 0; font-size: 10px; outline: none; border: 1px solid var(--border);">
+      <button class="btn-main" style="width:100%;" id="copy-btn" onclick="generatePrompt()">Copy Data Prompt</button>
+      <div id="ai-quick-links" style="display:none; margin-top: 15px;">
+          <div class="ai-links">
+              <a href="https://gemini.google.com/" target="_blank" class="ai-btn">✨ Gemini</a>
+              <a href="https://chat.openai.com/" target="_blank" class="ai-btn">🤖 ChatGPT</a>
+          </div>
+      </div>
     </div>
 </div>
 
@@ -157,44 +152,31 @@ textarea { width: 100%; height: 130px; margin: 10px 0; border: 1px solid var(--b
         <div id="tab-paste" class="tab active" onclick="switchTab('paste')">Paste CSV</div>
         <div id="tab-file" class="tab" onclick="switchTab('file')">Upload File</div>
     </div>
-    
-    <div id="view-paste">
-        <textarea id="paste-area" placeholder="PASTE_CSV_CODE_HERE..."></textarea>
-    </div>
-    
+    <div id="view-paste"><textarea id="paste-area" placeholder="PASTE_CSV_CODE_HERE..."></textarea></div>
     <div id="view-file" style="display:none">
-        <div id="drop-zone-el" class="drop-zone" onclick="document.getElementById('fin').click()">
-            <span id="drop-text">📂 Drop CSV or Click to Browse</span>
+        <div id="drop-zone" style="border:1px dashed #ddd; padding:30px; text-align:center; font-size:9px; cursor:pointer;" onclick="document.getElementById('fin').click()">
+            <span id="drop-text">📂 Click to Select CSV File</span>
         </div>
         <input id="fin" type="file" accept=".csv" style="display:none" onchange="hFile(event)"/>
     </div>
-
-    <div id="prog" style="display:none; font-size: 9px; margin: 10px 0; color: var(--accent); font-weight: bold;">GEOLOCATING CITIES...</div>
-    <button class="btn-main" style="width:100%; margin-top:10px;" onclick="processData()">EXECUTE IMPORT</button>
-  </div>
-</div>
-
-<div id="m-prompt" class="overlay" style="display:none" onclick="if(event.target===this)closePrompt()">
-    <div class="modal" onclick="event.stopPropagation()">
-      <div class="close-modal" onclick="closePrompt()">[X]</div>
-      <h2 style="font-size: 12px; text-transform: uppercase;">AI PROMPT GENERATOR</h2>
-      <input type="text" id="artist-names" placeholder="e.g. Idles, Osees" style="width: 100%; padding: 10px; border: 1px solid var(--border); font-family: inherit; font-size: 10px; margin: 15px 0; outline: none; width: 100%;">
-      <button class="btn-main" style="width:100%;" id="copy-btn" onclick="generatePrompt()">Copy Full Prompt</button>
+    <div id="progress-container">
+        <div id="progress-bar-bg"><div id="progress-bar-fill"></div></div>
+        <div id="progress-status">Processing: 0 / 0</div>
     </div>
+    <button id="btn-execute" class="btn-main" style="width:100%; margin-top:10px;" onclick="processData()">EXECUTE IMPORT</button>
+  </div>
 </div>
 
 <script>
 const MF = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
 const PAL = ["#ff4d00","#1a1a1a","#2b5e4c","#4a9eca","#6dbf7e","#e85d4a"];
-let gigs = [], map, clusterGroup, activeM = new Set(), activeArt = 'all', currentMode = 'paste', imping = false, selId = null;
+let gigs = [], map, clusterGroup, activeM = new Set(), activeArt = 'all', currentMode = 'paste', selId = null;
 
 function triggerOk() {
     for(let i=0; i<8; i++) {
         setTimeout(() => {
-            const el = document.createElement('div');
-            el.className = 'ok-floating'; el.innerHTML = '🙆‍♀️';
-            el.style.left = (Math.random() * 80 + 10) + '%';
-            document.body.appendChild(el);
+            const el = document.createElement('div'); el.className = 'ok-floating'; el.innerHTML = '🙆‍♀️';
+            el.style.left = (Math.random() * 80 + 10) + '%'; document.body.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }, i * 200);
     }
@@ -204,9 +186,9 @@ function openInfo() { document.getElementById('m-info').style.display='flex'; }
 function closeInfo() { document.getElementById('m-info').style.display='none'; }
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 function openImp() { document.getElementById('m-imp').style.display='flex'; }
-function closeImp() { if(!imping) document.getElementById('m-imp').style.display='none'; }
+function closeImp() { document.getElementById('m-imp').style.display='none'; }
 function openPromptGen() { document.getElementById('m-prompt').style.display='flex'; }
-function closePrompt() { document.getElementById('m-prompt').style.display='none'; document.getElementById('copy-btn').innerText = 'Copy Full Prompt'; }
+function closePrompt() { document.getElementById('m-prompt').style.display='none'; document.getElementById('ai-quick-links').style.display='none'; }
 
 function switchTab(m) {
     currentMode = m;
@@ -216,86 +198,112 @@ function switchTab(m) {
     document.getElementById('view-file').style.display = m==='file' ? 'block' : 'none';
 }
 
-function hFile(e) { if(e.target.files[0]) document.getElementById('drop-text').innerHTML = `📄 ${e.target.files[0].name}`; }
+function hFile(e) { if(e.target.files[0]) document.getElementById('drop-text').innerHTML = `📄 <b>${e.target.files[0].name}</b> Selected`; }
 
 function generatePrompt() {
     const names = document.getElementById('artist-names').value;
     if(!names) return;
     const today = new Date().toISOString().split('T')[0];
-    const p = `Subject: Future Gig List (STRICT CSV)\n\nArtists: ${names}.\n\nSTRICT RULES:\n1. ONLY dates from ${today} onwards.\n2. Headers: Artist, City, Venue, Date, Month, Year, Ticket Link.\n3. Date format: YYYY-MM-DD. Month: Number (1-12).\n4. RAW CSV ONLY.`;
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(p).then(() => { document.getElementById('copy-btn').innerText = 'COPIED!'; setTimeout(closePrompt, 1000); });
-    }
+    const textToCopy = `Subject: Concert Data Retrieval (STRICT CSV)\n\nArtists: ${names}.\nSOURCE: Search Songkick for upcoming dates.\n\nSTRICT RULES:\n1. ONLY dates from ${today} onwards.\n2. Output as RAW CSV block with headers: Artist, City, Venue, Date, Month, Year, Ticket Link.\n3. Date format: YYYY-MM-DD. RAW CSV ONLY.`;
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(textToCopy).then(() => showCopySuccess()).catch(() => fallbackCopy(textToCopy));
+    } else { fallbackCopy(textToCopy); }
+}
+
+function fallbackCopy(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text; document.body.appendChild(textArea);
+    textArea.select();
+    try { document.execCommand('copy'); showCopySuccess(); } catch (err) { alert('Please copy manually'); }
+    document.body.removeChild(textArea);
+}
+
+function showCopySuccess() {
+    document.getElementById('copy-btn').innerText = 'COPIED!';
+    document.getElementById('ai-quick-links').style.display = 'block';
 }
 
 async function processData() {
     let txt = "";
     if(currentMode === 'paste') txt = document.getElementById('paste-area').value;
     else if(document.getElementById('fin').files[0]) txt = await document.getElementById('fin').files[0].text();
-    
     if(!txt) return;
-    imping = true; document.getElementById('prog').style.display = 'block';
-    const lines = txt.split('\n');
+
+    const lines = txt.split('\n').filter(l => l.trim().length > 0);
     const headers = lines[0].toLowerCase().split(',').map(h=>h.trim());
-    for(let r of lines.slice(1).filter(l=>l.trim())) {
-        const cols = r.split(',').map(c=>c.trim());
-        const d = {}; headers.forEach((h,i)=> d[h]=cols[i]);
-        if(!d.artist || !d.city) continue;
-        const geo = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d.city)}&format=json&limit=1`).then(res=>res.json());
-        if(geo[0]) {
-            let mNum = parseInt(d.month) || (MF.findIndex(n => (d.month||"").toUpperCase().includes(n)) + 1);
-            gigs.push({ id: Math.random(), artist: d.artist, city: d.city, venue: d.venue||d.city, date: d.date, month: mNum || 1, lat: +geo[0].lat, lng: +geo[0].lon });
+    const dataRows = lines.slice(1);
+    const total = dataRows.length;
+    
+    document.getElementById('progress-container').style.display = 'block';
+    document.getElementById('btn-execute').disabled = true;
+
+    for(let i=0; i < total; i++) {
+        const cols = dataRows[i].split(',').map(c=>c.trim());
+        const d = {}; headers.forEach((h,idx)=> d[h]=cols[idx]);
+        if(d.artist && d.city && d.date) {
+            const exists = gigs.some(g => g.artist.toLowerCase() === d.artist.toLowerCase() && g.city.toLowerCase() === d.city.toLowerCase() && g.date === d.date);
+            if(!exists) {
+                const geo = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(d.city)}&format=json&limit=1`).then(res=>res.json());
+                if(geo[0]) {
+                    let mNum = parseInt(d.month) || (MF.findIndex(n => (d.month||"").toUpperCase().includes(n)) + 1);
+                    gigs.push({ id: Math.random(), artist: d.artist, city: d.city, venue: d.venue||d.city, date: d.date, month: mNum || 1, lat: +geo[0].lat, lng: +geo[0].lon });
+                }
+            }
         }
+        document.getElementById('progress-bar-fill').style.width = ((i + 1) / total * 100) + '%';
+        document.getElementById('progress-status').innerText = `Processing: ${i+1} / ${total}`;
         await new Promise(r => setTimeout(r, 400));
     }
-    imping = false; document.getElementById('prog').style.display = 'none'; closeImp(); refresh(); triggerOk();
+    
+    document.getElementById('progress-container').style.display = 'none';
+    document.getElementById('btn-execute').disabled = false;
+    closeImp(); refresh(); triggerOk();
 }
 
 function refresh() {
     const arts = [...new Set(gigs.map(g=>g.artist))].sort();
-    const filtered = gigs.filter(g => (activeM.size === 0 || activeM.has(g.month)) && (activeArt === 'all' || g.artist === activeArt)).sort((a,b) => new Date(a.date) - new Date(b.date));
+    const filtered = gigs.filter(g => (activeM.size === 0 || activeM.has(g.month)) && (activeArt === 'all' || g.artist === activeArt))
+                        .sort((a,b) => new Date(a.date) - new Date(b.date));
+
     document.getElementById('gig-count').innerText = `${filtered.length.toString().padStart(2,'0')} CONCERTS DETECTED`;
-    for(let i=1; i<=12; i++) document.getElementById(`mpill-${i}`).classList.toggle('on', activeM.has(i));
+    for(let i=1; i<=12; i++) {
+        const pill = document.getElementById(`mpill-${i}`);
+        if(pill) pill.classList.toggle('on', activeM.has(i));
+    }
+
     document.getElementById('legend').innerHTML = arts.map(a => `<div class="lpill ${activeArt===a?'on':''}" onclick="tglA('${a}')"><div class="ldot" style="background:${PAL[arts.indexOf(a)%PAL.length]}"></div>${a}</div>`).join('');
+
     clusterGroup.clearLayers();
     filtered.forEach(g => {
         const color = PAL[arts.indexOf(g.artist) % PAL.length];
-        const sz = g.id === selId ? 22 : 14;
-        const mk = L.marker([g.lat, g.lng], {
-            icon: L.divIcon({
-                className: '',
-                html: `<div style="width:${sz}px;height:${sz}px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.15)"></div>`,
-                iconSize: [sz, sz], iconAnchor: [sz/2, sz/2]
-            })
-        });
-        mk.bindPopup(`<div style="font-family:'Space Mono';text-transform:uppercase;"><b style="color:var(--accent);">${g.artist}</b><br><div>${g.venue}</div><div>${g.city}</div><div style="margin-top:8px;">📅 ${g.date}</div></div>`);
-        mk.bindTooltip(`${g.artist.toUpperCase()} // ${g.date}`, { permanent: false, direction: 'top', className: 'artist-tooltip', offset: [0, -sz/2] });
-        mk.on('click', () => { updateMusic(g.artist, g.id); });
+        const mk = L.marker([g.lat, g.lng], { icon: L.divIcon({ className: '', html: `<div style="width:14px;height:14px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.2)"></div>`, iconSize:[14,14] }) });
+        mk.bindPopup(`<b>${g.artist}</b><br>${g.venue}<br>${g.city}<br>📅 ${g.date}`);
+        mk.bindTooltip(`${g.artist} // ${g.date}`, { className: 'artist-label', direction: 'top', offset: [0, -5] });
+        mk.on('click', () => { selId = g.id; refresh(); map.flyTo([g.lat, g.lng], 13); });
         clusterGroup.addLayer(mk);
     });
-    document.getElementById('gig-list').innerHTML = filtered.map(g => `<div class="grow ${g.id===selId?'sel':''}" onclick="updateMusic('${g.artist}', ${g.id})"><b>${g.venue}</b><small>${g.artist} // ${g.city}</small><small style="color:var(--accent); font-weight:700;">📅 ${g.date}</small></div>`).join('');
+
+    document.getElementById('gig-list').innerHTML = filtered.map(g => `
+        <div class="grow ${selId==g.id?'sel':''}" onclick="selId='${g.id}'; refresh(); map.flyTo([${g.lat}, ${g.lng}], 13);">
+            <b>${g.artist}</b>
+            <small>${g.venue} // ${g.city}</small>
+            <div class="g-date">${g.date}</div>
+        </div>`).join('');
 }
 
-function updateMusic(artist, id) {
-    selId = id;
-    const g = gigs.find(x => x.id === id);
-    if(g) map.flyTo([g.lat, g.lng], 13);
-    document.getElementById('music-player').style.display = 'block';
-    document.getElementById('now-playing').innerText = `LISTEN TO ${artist.toUpperCase()}`;
-    document.getElementById('yt-frame').src = `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(artist + " live concert")}&autoplay=1`;
-    if (window.innerWidth <= 768) toggleSidebar();
-    refresh();
+function tglM(m) { 
+    if(activeM.has(m)) activeM.delete(m); 
+    else activeM.add(m); 
+    refresh(); 
 }
 
-function tglM(m) { activeM.has(m) ? activeM.delete(m) : activeM.add(m); refresh(); }
 function tglA(a) { activeArt = (activeArt === a) ? 'all' : a; refresh(); }
 
 window.addEventListener('load', () => {
-    map = L.map('map', { center: [40, 0], zoom: 3, zoomControl: false });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-    }).addTo(map);
-    clusterGroup = L.markerClusterGroup({ spiderfyOnMaxZoom: true, showCoverageOnHover: false, disableClusteringAtZoom: 16 }).addTo(map);
+    map = L.map('map', { center: [20, 0], zoom: 2, zoomControl: false, attributionControl: false });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png').addTo(map);
+    clusterGroup = L.markerClusterGroup({ spiderfyOnMaxZoom: true }).addTo(map);
 });
 </script>
 </body>
